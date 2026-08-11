@@ -430,101 +430,223 @@ class BluesoundController:
                 continue
         return found_ips
     
-    def sync_unifi(self) -> str:
-        """Fetches client data from UniFi Controller."""
+    @staticmethod
+    def _unifi_api_headers(api_key: str) -> Dict[str, str]:
+        return {
+            'X-API-KEY': api_key,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+
+    def _fetch_unifi_json(
+        self, base: str, site: str, api_key: str, path: str, timeout: int = 4
+    ) -> Optional[Dict]:
+        """GET a UniFi Network API path and return parsed JSON, or None on failure."""
+        url = f"https://{base}/proxy/network/api/s/{site}/{path}"
+        resp_bytes = Network.get(
+            url, timeout=timeout, headers=self._unifi_api_headers(api_key)
+        )
+        if not resp_bytes:
+            return None
+        try:
+            parsed = json.loads(resp_bytes)
+            return parsed if isinstance(parsed, dict) else None
+        except (json.JSONDecodeError, TypeError):
+            return None
+
+    @staticmethod
+    def _switch_port_rate_index(
+        devices: List[Dict],
+    ) -> Dict[Tuple[str, int], Tuple[float, float]]:
+        """Map ``(switch_mac, port_idx)`` → ``(down_Bps, up_Bps)`` from port_table.
+
+        Switch TX is traffic to the client (download); RX is from the client (upload).
+        """
+        index: Dict[Tuple[str, int], Tuple[float, float]] = {}
+        for device in devices:
+            port_table = device.get('port_table')
+            if not port_table:
+                continue
+            sw_mac = str(device.get('mac') or '').lower()
+            if not sw_mac:
+                continue
+            for port in port_table:
+                port_idx = port.get('port_idx')
+                if port_idx is None:
+                    continue
+                try:
+                    idx = int(port_idx)
+                except (TypeError, ValueError):
+                    continue
+                down = port.get('tx_bytes-r', port.get('tx_bytes_r', 0)) or 0
+                up = port.get('rx_bytes-r', port.get('rx_bytes_r', 0)) or 0
+                try:
+                    index[(sw_mac, idx)] = (float(down), float(up))
+                except (TypeError, ValueError):
+                    continue
+        return index
+
+    @staticmethod
+    def _client_traffic_fields(client: Dict, is_wired: bool) -> Tuple[float, float, float, float]:
+        """Return ``(down_tot, up_tot, down_rate, up_rate)`` from a ``stat/sta`` client."""
+        if is_wired:
+            return (
+                float(client.get('wired-tx_bytes', 0) or 0),
+                float(client.get('wired-rx_bytes', 0) or 0),
+                float(client.get('wired-tx_bytes-r', 0) or 0),
+                float(client.get('wired-rx_bytes-r', 0) or 0),
+            )
+        return (
+            float(client.get('tx_bytes', 0) or 0),
+            float(client.get('rx_bytes', 0) or 0),
+            float(client.get('tx_bytes-r', 0) or 0),
+            float(client.get('rx_bytes-r', 0) or 0),
+        )
+
+    def _unifi_client_from_sta(
+        self,
+        client: Dict,
+        port_rates: Dict[Tuple[str, int], Tuple[float, float]],
+    ) -> UniFiClient:
+        """Build a UniFiClient: Wi‑Fi uses STA rates; wired prefers switch port rates."""
+        is_wired = bool(client.get('is_wired', False)) or str(client.get('type', '')).upper() == 'WIRED'
+        down_tot, up_tot, down_rate, up_rate = self._client_traffic_fields(client, is_wired)
+        rate_source = "wifi"
+
+        if is_wired:
+            uplink = client.get('last_uplink_name') or 'Unknown Switch'
+            port_raw = client.get('sw_port')
+            if port_raw is None:
+                port_raw = client.get('last_uplink_remote_port')
+            port_info = str(port_raw) if port_raw is not None else ''
+            rate_source = "client"
+            sw_mac = str(client.get('sw_mac') or '').lower()
+            try:
+                port_idx = int(port_raw) if port_raw is not None else None
+            except (TypeError, ValueError):
+                port_idx = None
+            if sw_mac and port_idx is not None:
+                port_rate = port_rates.get((sw_mac, port_idx))
+                if port_rate is not None:
+                    down_rate, up_rate = port_rate
+                    rate_source = "switch-port"
+        else:
+            uplink = (
+                client.get('ap_name')
+                or client.get('last_uplink_name')
+                or client.get('ap_mac')
+                or 'Unknown AP'
+            )
+            essid = client.get('essid', '')
+            port_info = f"WiFi: {essid}" if essid else "WiFi"
+
+        return UniFiClient(
+            mac=str(client.get('mac', '')).lower(),
+            is_wired=is_wired,
+            uplink=uplink,
+            port_info=port_info,
+            down_tot=int(down_tot),
+            up_tot=int(up_tot),
+            down_rate=int(down_rate),
+            up_rate=int(up_rate),
+            uptime=int(client.get('uptime', 0) or 0),
+            rate_source=rate_source,
+        )
+
+    def _load_unifi_cache(self, target_ips: Set[str]) -> Optional[Dict[str, UniFiClient]]:
+        """Return a usable UniFi cache covering ``target_ips``, else None."""
+        if not os.path.exists(UNIFI_CACHE_FILE):
+            return None
+        try:
+            with open(UNIFI_CACHE_FILE, "r") as f:
+                data = json.load(f)
+            if time.time() - float(data.get('ts', 0)) >= int(self.config.get('CACHE_TTL', 300)):
+                return None
+            cached_clients = data.get('clients', {}) or {}
+            cached_map: Dict[str, UniFiClient] = {}
+            for ip, payload in cached_clients.items():
+                if not sanitize_ip(str(ip)):
+                    continue
+                try:
+                    cached_map[ip] = UniFiClient(**payload)
+                except TypeError:
+                    # Drop entries from incompatible/older cache shapes
+                    continue
+            if cached_map and (target_ips & set(cached_map.keys())):
+                return cached_map
+            logger.debug(
+                "UniFi cache miss for discovered players; refreshing "
+                f"(targets={sorted(target_ips)}, cached={sorted(cached_map.keys())})"
+            )
+        except Exception:
+            return None
+        return None
+
+    def sync_unifi(self, force_refresh: bool = False) -> str:
+        """Fetches client data from UniFi Controller.
+
+        Live rates:
+        - Wi‑Fi clients → ``stat/sta`` AP/client counters
+        - Wired clients → switch ``port_table`` rates via ``sw_mac`` + ``sw_port``
+          (falls back to client ``wired-*`` rates if port stats are unavailable)
+        """
         if self.config.get('UNIFI_ENABLED') != 'true' or not self.ips:
             return "SKIPPED"
-        
-        # Check config first before checking cache
+
         base = self.config.get('UNIFI_CONTROLLER')
         site = self.config.get('UNIFI_SITE', 'default')
         key = self.config.get_unifi_api_key()
-        
+
         if not base or not key:
             return "MISSING_CONFIG"
-        
+
         # self.ips holds ip:port endpoints; UniFi keys are chassis IPs
         target_ips = {parse_bluos_host(ep) for ep in self.ips}
         target_ips.discard("")
         if not target_ips:
             return "SKIPPED"
 
-        # Check Cache — only reuse if it still covers discovered players
-        if os.path.exists(UNIFI_CACHE_FILE):
-            try:
-                with open(UNIFI_CACHE_FILE, "r") as f:
-                    data = json.load(f)
-                if time.time() - float(data.get('ts', 0)) < int(self.config.get('CACHE_TTL', 300)):
-                    cached_clients = data.get('clients', {}) or {}
-                    cached_map = {
-                        ip: UniFiClient(**d)
-                        for ip, d in cached_clients.items()
-                        if sanitize_ip(str(ip))
-                    }
-                    # Ignore stale/empty caches that don't match current players
-                    if cached_map and (target_ips & set(cached_map.keys())):
-                        self.unifi_map = cached_map
-                        return "CACHED"
-                    logger.debug(
-                        "UniFi cache miss for discovered players; refreshing "
-                        f"(targets={sorted(target_ips)}, cached={sorted(cached_map.keys())})"
-                    )
-            except Exception:
-                pass
-        
-        # Fetch Fresh
-        
-        url = f"https://{base}/proxy/network/api/s/{site}/stat/sta"
-        headers = {
-            'X-API-KEY': key,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-        
-        resp_bytes = Network.get(url, timeout=4, headers=headers)
-        if not resp_bytes:
-            # Graceful degradation: continue without UniFi data
+        if not force_refresh:
+            cached = self._load_unifi_cache(target_ips)
+            if cached is not None:
+                self.unifi_map = cached
+                return "CACHED"
+
+        sta = self._fetch_unifi_json(base, site, key, "stat/sta")
+        if not sta:
             logger.warning("UniFi fetch failed, continuing without network stats")
             return "ERROR_FETCH"
-        
+
         try:
-            raw = json.loads(resp_bytes)
-            temp_map = {}
-            
-            for c in raw.get('data', []):
-                ip = c.get('ip')
+            stations = [
+                c for c in sta.get('data', [])
+                if isinstance(c, dict)
+                and sanitize_ip(str(c.get('ip') or '')) in target_ips
+            ]
+            needs_port_stats = any(
+                bool(c.get('is_wired', False)) or str(c.get('type', '')).upper() == 'WIRED'
+                for c in stations
+            )
+            port_rates: Dict[Tuple[str, int], Tuple[float, float]] = {}
+            if needs_port_stats:
+                devices = self._fetch_unifi_json(base, site, key, "stat/device")
+                if devices:
+                    port_rates = self._switch_port_rate_index(
+                        [d for d in devices.get('data', []) if isinstance(d, dict)]
+                    )
+                else:
+                    logger.warning(
+                        "UniFi switch stats unavailable; falling back to wired client rates"
+                    )
+
+            temp_map: Dict[str, UniFiClient] = {}
+            for client in stations:
+                ip = sanitize_ip(str(client.get('ip') or ''))
                 if not ip:
                     continue
-                # Validate IP from UniFi response
-                sanitized_ip = sanitize_ip(str(ip))
-                if not sanitized_ip or sanitized_ip not in target_ips:
-                    continue
-                ip = sanitized_ip
-                
-                is_wired = c.get('is_wired', False) or str(c.get('type', '')).upper() == 'WIRED'
-                
-                if is_wired:
-                    uplink = c.get('last_uplink_name', 'Unknown Switch')
-                    port_info = str(c.get('sw_port') or c.get('last_uplink_remote_port') or '')
-                else:
-                    uplink = c.get('ap_name') or c.get('last_uplink_name') or c.get('ap_mac') or 'Unknown AP'
-                    essid = c.get('essid', '')
-                    port_info = f"WiFi: {essid}" if essid else "WiFi"
-                
-                temp_map[ip] = UniFiClient(
-                    mac=c.get('mac', '').lower(),
-                    is_wired=is_wired,
-                    uplink=uplink,
-                    port_info=port_info,
-                    down_tot=c.get('tx_bytes', 0) if not is_wired else c.get('wired-tx_bytes', 0),
-                    up_tot=c.get('rx_bytes', 0) if not is_wired else c.get('wired-rx_bytes', 0),
-                    down_rate=c.get('tx_bytes-r', 0) if not is_wired else c.get('wired-tx_bytes-r', 0),
-                    up_rate=c.get('rx_bytes-r', 0) if not is_wired else c.get('wired-rx_bytes-r', 0),
-                    uptime=c.get('uptime', 0)
-                )
-            
+                temp_map[ip] = self._unifi_client_from_sta(client, port_rates)
+
             self.unifi_map = temp_map
-            # Don't overwrite a good cache with an empty fetch result
             if temp_map:
                 cache_payload = {ip: asdict(obj) for ip, obj in temp_map.items()}
                 atomic_write(UNIFI_CACHE_FILE, {'ts': time.time(), 'clients': cache_payload})

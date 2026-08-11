@@ -74,7 +74,9 @@ class TestMain:
         with patch('sys.argv', ['main.py', 'status']):
             with patch('main.argparse.ArgumentParser.parse_args', return_value=args):
                 main.main()
-                mock_cli.status.assert_called_once_with(pattern=None, json_mode=False)
+                mock_cli.status.assert_called_once_with(
+                    pattern=None, json_mode=False, force_refresh=False
+                )
     
     @patch('main.BluesoundController')
     @patch('main.BluesoundCLI')
@@ -95,6 +97,9 @@ class TestMain:
             with patch('main.argparse.ArgumentParser.parse_args', return_value=args):
                 main.main()
                 mock_ctl.discover.assert_called_once_with(force_refresh=True)
+                mock_cli.status.assert_called_once_with(
+                    pattern=None, json_mode=False, force_refresh=True
+                )
     
     @patch('main.BluesoundController')
     @patch('main.BluesoundCLI')

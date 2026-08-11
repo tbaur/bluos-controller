@@ -338,7 +338,11 @@ def main() -> None:
     if args.command == "discover":
         cli.discover()
     elif args.command == "status":
-        cli.status(pattern=args.pattern, json_mode=args.json)
+        cli.status(
+            pattern=args.pattern,
+            json_mode=args.json,
+            force_refresh=getattr(args, 'scan', False),
+        )
     elif args.command == "volume":
         cli.volume(args)
     elif args.command == "play":

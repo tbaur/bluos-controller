@@ -34,6 +34,8 @@ class UniFiClient:
     down_rate: int = 0
     up_rate: int = 0
     uptime: int = 0
+    # Where live rates came from: "wifi", "switch-port", or "client" (fallback).
+    rate_source: str = ""
 
 
 @dataclass
