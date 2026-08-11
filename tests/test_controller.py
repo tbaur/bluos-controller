@@ -160,7 +160,7 @@ class TestBluesoundController:
     @patch('os.path.exists')
     @patch('config.get_api_key', return_value=None)
     def test_sync_unifi_success(self, mock_keychain, mock_exists, mock_network, controller):
-        """Test successful UniFi sync."""
+        """Test successful UniFi sync for Wi‑Fi (STA rates, no device fetch)."""
         # Ensure cache doesn't exist so we test fresh fetch
         mock_exists.return_value = False
         
@@ -194,6 +194,119 @@ class TestBluesoundController:
         
         assert result.startswith("SUCCESS:")
         assert '192.168.1.1' in controller.unifi_map
+        wifi = controller.unifi_map['192.168.1.1']
+        assert wifi.rate_source == "wifi"
+        assert wifi.down_rate == 100
+        assert wifi.up_rate == 200
+        assert mock_network.call_count == 1
+
+    @patch('controller.Network.get')
+    @patch('os.path.exists')
+    @patch('config.get_api_key', return_value=None)
+    def test_sync_unifi_wired_uses_switch_port_rates(
+        self, mock_keychain, mock_exists, mock_network, controller
+    ):
+        """Wired clients prefer switch port_table rates over broken STA rates."""
+        mock_exists.return_value = False
+        controller.ips = ['172.16.10.101']
+        controller.config.data = {
+            'UNIFI_ENABLED': 'true',
+            'UNIFI_CONTROLLER': 'controller.local',
+            'UNIFI_API_KEY': 'test-key',
+            'UNIFI_SITE': 'default',
+            'CACHE_TTL': '300',
+        }
+
+        sta_response = {
+            'data': [{
+                'ip': '172.16.10.101',
+                'is_wired': True,
+                'last_uplink_name': 'sw3-01',
+                'sw_mac': '11:22:33:44:55:66',
+                'sw_port': 9,
+                'mac': 'aa:bb:cc:dd:ee:01',
+                'wired-tx_bytes': 1_000_000,
+                'wired-rx_bytes': 2_000_000,
+                'wired-tx_bytes-r': 0,
+                'wired-rx_bytes-r': 0,
+                'uptime': 3600,
+            }]
+        }
+        device_response = {
+            'data': [{
+                'mac': '11:22:33:44:55:66',
+                'type': 'usw',
+                'name': 'sw3-01',
+                'port_table': [
+                    {
+                        'port_idx': 9,
+                        'tx_bytes-r': 500_000,  # to client ≈ download
+                        'rx_bytes-r': 12_000,   # from client ≈ upload
+                    }
+                ],
+            }]
+        }
+        mock_network.side_effect = [
+            json.dumps(sta_response).encode(),
+            json.dumps(device_response).encode(),
+        ]
+
+        result = controller.sync_unifi()
+
+        assert result == "SUCCESS:1"
+        wired = controller.unifi_map['172.16.10.101']
+        assert wired.is_wired is True
+        assert wired.rate_source == "switch-port"
+        assert wired.down_rate == 500_000
+        assert wired.up_rate == 12_000
+        assert wired.down_tot == 1_000_000
+        assert wired.uplink == "sw3-01"
+        assert wired.port_info == "9"
+        assert mock_network.call_count == 2
+
+    @patch('controller.Network.get')
+    @patch('os.path.exists')
+    @patch('config.get_api_key', return_value=None)
+    def test_sync_unifi_wired_falls_back_to_client_rates(
+        self, mock_keychain, mock_exists, mock_network, controller
+    ):
+        """If switch stats are missing, keep wired STA rates as fallback."""
+        mock_exists.return_value = False
+        controller.ips = ['172.16.10.101']
+        controller.config.data = {
+            'UNIFI_ENABLED': 'true',
+            'UNIFI_CONTROLLER': 'controller.local',
+            'UNIFI_API_KEY': 'test-key',
+            'UNIFI_SITE': 'default',
+            'CACHE_TTL': '300',
+        }
+        sta_response = {
+            'data': [{
+                'ip': '172.16.10.101',
+                'is_wired': True,
+                'last_uplink_name': 'sw3-01',
+                'sw_mac': '11:22:33:44:55:66',
+                'sw_port': 9,
+                'mac': 'aa:bb:cc:dd:ee:01',
+                'wired-tx_bytes': 100,
+                'wired-rx_bytes': 200,
+                'wired-tx_bytes-r': 50,
+                'wired-rx_bytes-r': 25,
+                'uptime': 10,
+            }]
+        }
+        mock_network.side_effect = [
+            json.dumps(sta_response).encode(),
+            None,  # stat/device failed
+        ]
+
+        result = controller.sync_unifi()
+
+        assert result == "SUCCESS:1"
+        wired = controller.unifi_map['172.16.10.101']
+        assert wired.rate_source == "client"
+        assert wired.down_rate == 50
+        assert wired.up_rate == 25
     
     def test_sync_unifi_skipped_when_disabled(self, controller):
         """Test that UniFi sync is skipped when disabled."""
@@ -260,6 +373,19 @@ class TestBluesoundController:
         assert mock_network.called
         # Verify the mock was called with the Keychain API key
         mock_keychain.assert_called()
+
+    def test_switch_port_rate_index(self, controller):
+        """Port index maps switch MAC + port to TX/RX rates."""
+        devices = [{
+            'mac': 'AA:BB:CC:DD:EE:FF',
+            'port_table': [
+                {'port_idx': 3, 'tx_bytes-r': 1000, 'rx_bytes-r': 200},
+                {'port_idx': 'bad', 'tx_bytes-r': 1, 'rx_bytes-r': 1},
+            ],
+        }]
+        index = controller._switch_port_rate_index(devices)
+        assert index[('aa:bb:cc:dd:ee:ff', 3)] == (1000.0, 200.0)
+        assert ('aa:bb:cc:dd:ee:ff', 'bad') not in index
     
     @patch('controller.Network.get')
     def test_get_sys_uptime(self, mock_network, controller):

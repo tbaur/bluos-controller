@@ -169,13 +169,18 @@ class BluesoundCLI:
         print("-" * 40)
         print()
     
-    def status(self, pattern: Optional[str] = None, json_mode: bool = False):
+    def status(
+        self,
+        pattern: Optional[str] = None,
+        json_mode: bool = False,
+        force_refresh: bool = False,
+    ):
         """Display device status."""
         if not self.ctl.ips:
             print(f"{RED}Error: No IPs found (Try --scan).{RESET}\n")
             return
         
-        ustatus = self.ctl.sync_unifi()
+        ustatus = self.ctl.sync_unifi(force_refresh=force_refresh)
         devices: List[PlayerStatus] = []
         
         max_workers = min(MAX_WORKERS_STATUS, len(self.ctl.ips)) if self.ctl.ips else MAX_WORKERS_STATUS
@@ -258,7 +263,11 @@ class BluesoundCLI:
             print(f"    IP:    {endpoint_disp}  | {conn_str}")
             
             if d.unifi and d.unifi.uplink != 'Unknown':
-                print(f"    Net:   ↓ {format_rate(d.unifi.down_rate)}  ↑ {format_rate(d.unifi.up_rate)}  (Total: {format_bytes(d.unifi.down_tot)} / {format_bytes(d.unifi.up_tot)})")
+                rate_src = f" [{d.unifi.rate_source}]" if d.unifi.rate_source else ""
+                print(
+                    f"    Net:   ↓ {format_rate(d.unifi.down_rate)}  ↑ {format_rate(d.unifi.up_rate)}  "
+                    f"(Total: {format_bytes(d.unifi.down_tot)} / {format_bytes(d.unifi.up_tot)}){rate_src}"
+                )
                 print(f"    Link:  Connected to '{d.unifi.uplink}' ({d.unifi.port_info}) | Conn Time: {format_uptime(d.unifi.uptime)}")
             
             sys_line = f"System: FW {d.fw or 'N/A'}"
@@ -603,11 +612,18 @@ class BluesoundCLI:
         print(f"ARP MAC:    {CYAN}{arp_mac}{RESET}")
         print(f"Sys Uptime: {GREEN}{sys_uptime}{RESET}")
         
-        self.ctl.sync_unifi()
+        self.ctl.sync_unifi(force_refresh=True)
         u = self.ctl.unifi_map.get(tgt_ip)
         if u:
-            print(f"UniFi DB:   {GREEN}FOUND{RESET} -> Wired: {u.is_wired}, Uplink: {u.uplink}")
-            print(f"            Conn Time: {format_uptime(u.uptime)}")
+            rate_note = f", Rates: {u.rate_source}" if u.rate_source else ""
+            print(
+                f"UniFi DB:   {GREEN}FOUND{RESET} -> Wired: {u.is_wired}, "
+                f"Uplink: {u.uplink}{rate_note}"
+            )
+            print(
+                f"            ↓ {format_rate(u.down_rate)}  ↑ {format_rate(u.up_rate)}  | "
+                f"Conn Time: {format_uptime(u.uptime)}"
+            )
         else:
             print(f"UniFi DB:   {DIM}Not Found{RESET}")
         
