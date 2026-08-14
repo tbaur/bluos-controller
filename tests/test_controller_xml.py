@@ -4,7 +4,7 @@ Tests for XML parsing and device info in controller.
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 
-from controller import BluesoundController
+from controller import BluOSController
 from models import PlayerStatus
 from constants import MAX_XML_SIZE, MAX_XML_DEPTH, MAX_XML_ELEMENTS, MAX_XML_ATTRIBUTES
 
@@ -16,7 +16,7 @@ class TestXMLParsing:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     def test_safe_parse_xml_valid(self, controller):
@@ -98,13 +98,13 @@ class TestDeviceInfo:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network.get')
     def test_get_device_info_full(self, mock_network, controller):
         """Test getting full device info."""
-        sync_xml = b'<sync name="Speaker" modelName="Node" brand="Bluesound" version="1.0" db="192.168.1.100" master=""/>'
+        sync_xml = b'<sync name="Speaker" modelName="Node" brand="BluOS" version="1.0" db="192.168.1.100" master=""/>'
         status_xml = b'<status><volume>50</volume><state>play</state><service>Library</service><title1>Song</title1><artist>Artist</artist><album>Album</album></status>'
         html = b'<html>Uptime: 1 day</html>'
         

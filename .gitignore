@@ -30,7 +30,7 @@ Thumbs.db
 # Cache
 cache/
 *.tmp
-.bluesound-tmp-discovery-*
+.bluos-tmp-discovery-*
 
 # Test artifacts
 .pytest_cache/

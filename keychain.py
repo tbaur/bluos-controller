@@ -21,10 +21,10 @@ import sys
 import logging
 from typing import Optional
 
-logger = logging.getLogger("Bluesound")
+logger = logging.getLogger("BluOS")
 
 # Keychain service and account names
-KEYCHAIN_SERVICE = "bluesound-controller"
+KEYCHAIN_SERVICE = "bluos-controller"
 KEYCHAIN_ACCOUNT = "unifi-api-key"
 
 # Characters that are unsafe in subprocess arguments

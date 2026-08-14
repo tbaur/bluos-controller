@@ -22,8 +22,8 @@ A clear and concise description of what actually happened.
 ## Environment
 - **macOS Version**: (e.g., macOS 15.2)
 - **Python Version**: (e.g., Python 3.12)
-- **Bluesound Controller Version**: (run `bluesound-controller --version` if available, or commit hash)
-- **Device Model**: (e.g., Bluesound Node 2i)
+- **BluOS Controller Version**: (run `bluos-controller --version` if available, or commit hash)
+- **Device Model**: (e.g., BluOS Node 2i)
 
 ## Error Messages
 ```
@@ -43,5 +43,5 @@ If relevant, paste your configuration (remove any sensitive information):
 Add any other context about the problem here.
 
 ## Logs
-If applicable, add logs from `~/.config/bluesound-controller/bluesound-controller.log` (with sensitive information removed).
+If applicable, add logs from `~/.config/bluos-controller/bluos-controller.log` (with sensitive information removed).
 

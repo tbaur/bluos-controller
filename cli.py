@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLI interface for Bluesound Controller.
+CLI interface for BluOS Controller.
 
 Copyright 2025 tbaur
 
@@ -27,13 +27,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as
 
 from constants import BOLD, RED, GREEN, YELLOW, BLUE, CYAN, RESET, DIM, BLUOS_PORT, MAX_WORKERS_DISCOVERY, MAX_WORKERS_STATUS
 from models import PlayerStatus
-from controller import BluesoundController
+from controller import BluOSController
 from network import Network
 from utils import format_bytes, format_rate, format_uptime
 from validators import validate_volume, sanitize_ip, validate_ip
 from keychain import set_api_key, get_api_key, delete_api_key, has_api_key, is_macos
 
-logger = logging.getLogger("Bluesound")
+logger = logging.getLogger("BluOS")
 
 
 def _player_api_base(device: PlayerStatus) -> Optional[str]:
@@ -43,10 +43,10 @@ def _player_api_base(device: PlayerStatus) -> Optional[str]:
     return f"http://{device.ip}:{device.port}"
 
 
-class BluesoundCLI:
-    """Command-line interface for Bluesound Controller."""
+class BluOSCLI:
+    """Command-line interface for BluOS Controller."""
     
-    def __init__(self, ctl: BluesoundController):
+    def __init__(self, ctl: BluOSController):
         self.ctl = ctl
         self._did_stale_rescan = False
     
@@ -95,10 +95,10 @@ class BluesoundCLI:
     
     def print_help(self) -> None:
         """Print help information."""
-        bc = f"{GREEN}bluesound-controller{RESET}"
+        bc = f"{GREEN}bluos-controller{RESET}"
 
-        print(f"\n{BOLD}Bluesound Controller{RESET}")
-        print(f"{DIM}Command-line controller for Bluesound devices on macOS.{RESET}\n")
+        print(f"\n{BOLD}BluOS Controller{RESET}")
+        print(f"{DIM}Command-line controller for BluOS devices on macOS.{RESET}\n")
 
         print(f"{BOLD}Usage:{RESET}  {bc} <command> [options]\n")
 
@@ -136,8 +136,8 @@ class BluesoundCLI:
         print(f"  {GREEN}reboot{RESET}   {DIM}[name] [--soft]{RESET}           Reboot devices")
         print(f"  {GREEN}keychain{RESET} {DIM}set|get|delete{RESET}            Manage UniFi API key in macOS Keychain\n")
 
-        print(f"{BOLD}Config:{RESET}  {DIM}~/.config/bluesound-controller/config.json{RESET}")
-        print(f"{BOLD}Debug:{RESET}   {DIM}BLUESOUND_DEBUG=1 bluesound-controller <command>{RESET}\n")
+        print(f"{BOLD}Config:{RESET}  {DIM}~/.config/bluos-controller/config.json{RESET}")
+        print(f"{BOLD}Debug:{RESET}   {DIM}BLUOS_DEBUG=1 bluos-controller <command>{RESET}\n")
     
     def discover(self) -> None:
         """Discover and list devices."""
@@ -344,7 +344,7 @@ class BluesoundCLI:
                     f"Run `{GREEN}discover{RESET}` or `{GREEN}status --scan{RESET}` first.{RESET}"
                 )
             else:
-                print(f"{YELLOW}No Bluesound players responded on cached IPs.{RESET}")
+                print(f"{YELLOW}No BluOS players responded on cached IPs.{RESET}")
             return
 
         grouped_ips: set[str] = set()
@@ -510,7 +510,7 @@ class BluesoundCLI:
             return
         
         scope = f"'{target}'" if target else "ALL"
-        print(f"\n{RED}{BOLD}WARNING: Reboot {scope} Bluesound devices?{RESET}")
+        print(f"\n{RED}{BOLD}WARNING: Reboot {scope} BluOS devices?{RESET}")
         if input("Confirm (y/N): ").lower() != 'y':
             return
         
@@ -539,7 +539,7 @@ class BluesoundCLI:
             return
         
         scope = f"'{target}'" if target else "ALL"
-        print(f"\n{YELLOW}{BOLD}Soft Reboot {scope} Bluesound devices?{RESET}")
+        print(f"\n{YELLOW}{BOLD}Soft Reboot {scope} BluOS devices?{RESET}")
         if input("Confirm (y/N): ").lower() != 'y':
             return
         

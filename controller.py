@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bluesound Controller - Core device management logic.
+BluOS Controller - Core device management logic.
 
 Copyright 2025 tbaur
 
@@ -59,7 +59,7 @@ from validators import (
 )
 from lsdp import LSDPDiscovery
 
-logger = logging.getLogger("Bluesound")
+logger = logging.getLogger("BluOS")
 
 
 def parse_bluos_host(value: Optional[str]) -> str:
@@ -112,8 +112,8 @@ def parse_sync_status_root(root: ET.Element) -> tuple[str, str, List[str]]:
     return master, group, slaves
 
 
-class BluesoundController:
-    """Main controller for Bluesound device management."""
+class BluOSController:
+    """Main controller for BluOS device management."""
     
     def __init__(self):
         self.config = Config()
@@ -331,7 +331,7 @@ class BluesoundController:
         safe_service = re.sub(r'[^a-zA-Z0-9._-]', '_', service)
         tmp_file = os.path.join(
             os.path.expanduser("~"),
-            f".bluesound-tmp-discovery-{os.getpid()}-{safe_service}",
+            f".bluos-tmp-discovery-{os.getpid()}-{safe_service}",
         )
         try:
             with open(tmp_file, 'w') as outfile:

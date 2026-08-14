@@ -15,7 +15,7 @@ class TestMain:
         """Test main with help flag."""
         with patch('sys.argv', ['main.py', '--help']):
             with patch('sys.exit') as mock_exit:
-                with patch('main.BluesoundCLI') as mock_cli:
+                with patch('main.BluOSCLI') as mock_cli:
                     mock_cli.return_value.print_help.return_value = None
                     try:
                         main.main()
@@ -28,7 +28,7 @@ class TestMain:
         """Test main with no arguments."""
         with patch('sys.argv', ['main.py']):
             with patch('sys.exit') as mock_exit:
-                with patch('main.BluesoundCLI') as mock_cli:
+                with patch('main.BluOSCLI') as mock_cli:
                     mock_cli.return_value.print_help.return_value = None
                     try:
                         main.main()
@@ -37,8 +37,8 @@ class TestMain:
                     # Should exit after showing help
                     assert mock_exit.called
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_discover(self, mock_cli_class, mock_ctl_class):
         """Test main with discover command."""
         mock_ctl = MagicMock()
@@ -56,8 +56,8 @@ class TestMain:
                 mock_ctl.discover.assert_called_once()
                 mock_cli.discover.assert_called_once()
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_status(self, mock_cli_class, mock_ctl_class):
         """Test main with status command."""
         mock_ctl = MagicMock()
@@ -78,8 +78,8 @@ class TestMain:
                     pattern=None, json_mode=False, force_refresh=False
                 )
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_status_with_scan(self, mock_cli_class, mock_ctl_class):
         """Test main with status --scan."""
         mock_ctl = MagicMock()
@@ -101,8 +101,8 @@ class TestMain:
                     pattern=None, json_mode=False, force_refresh=True
                 )
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_volume(self, mock_cli_class, mock_ctl_class):
         """Test main with volume command."""
         mock_ctl = MagicMock()
@@ -121,8 +121,8 @@ class TestMain:
                 main.main()
                 mock_cli.volume.assert_called_once()
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_play(self, mock_cli_class, mock_ctl_class):
         """Test main with play command."""
         mock_ctl = MagicMock()
@@ -140,8 +140,8 @@ class TestMain:
                 main.main()
                 mock_cli.play.assert_called_once()
     
-    @patch('main.BluesoundController')
-    @patch('main.BluesoundCLI')
+    @patch('main.BluOSController')
+    @patch('main.BluOSCLI')
     def test_main_reboot_soft(self, mock_cli_class, mock_ctl_class):
         """Test main with reboot --soft."""
         mock_ctl = MagicMock()

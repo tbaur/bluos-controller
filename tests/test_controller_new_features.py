@@ -4,7 +4,7 @@ Tests for new controller features (playback, queue, inputs, etc.).
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 
-from controller import BluesoundController
+from controller import BluOSController
 from models import PlayerStatus
 from constants import BLUOS_PORT
 
@@ -16,7 +16,7 @@ class TestPlaybackControls:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             ctl.ips = ["192.168.1.100"]
             return ctl
     
@@ -79,7 +79,7 @@ class TestQueueManagement:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network')
@@ -132,7 +132,7 @@ class TestInputManagement:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network')
@@ -180,7 +180,7 @@ class TestBluetoothControl:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network')
@@ -221,7 +221,7 @@ class TestPresetManagement:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network')
@@ -264,7 +264,7 @@ class TestSyncGroups:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             return ctl
     
     @patch('controller.Network')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Data models for Bluesound Controller.
+Data models for BluOS Controller.
 
 Copyright 2025 tbaur
 
@@ -40,7 +40,7 @@ class UniFiClient:
 
 @dataclass
 class PlayerStatus:
-    """Aggregate state of a Bluesound Player."""
+    """Aggregate state of a BluOS Player."""
     ip: str
     name: str = "Unknown"
     model: str = ""

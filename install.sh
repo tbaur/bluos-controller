@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Bluesound Controller Installation Script
-# Sets up the controller in ~/.config/bluesound-controller
+# BluOS Controller Installation Script
+# Sets up the controller in ~/.config/bluos-controller
 #
 # Copyright 2025 tbaur
 #
@@ -32,16 +32,16 @@ RESET='\033[0m'
 
 # Paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INSTALL_DIR="$HOME/.config/bluesound-controller"
+INSTALL_DIR="$HOME/.config/bluos-controller"
 BIN_DIR="$HOME/local/bin"
-BIN_NAME="bluesound-controller"
+BIN_NAME="bluos-controller"
 
-echo -e "${BOLD}${BLUE}Bluesound Controller Installation${RESET}"
+echo -e "${BOLD}${BLUE}BluOS Controller Installation${RESET}"
 echo -e "${BLUE}=======================================${RESET}"
 echo ""
 
 # Check if this is an update or new install
-CONFIG_FILE="$HOME/.config/bluesound-controller/config.json"
+CONFIG_FILE="$HOME/.config/bluos-controller/config.json"
 if [ -f "$CONFIG_FILE" ]; then
     echo -e "${CYAN}Update mode: Existing installation detected${RESET}"
     echo -e "${DIM}Configuration will be preserved.${RESET}"
@@ -159,7 +159,7 @@ if [ "$IS_UPDATE" = false ]; then
             if [[ ! $REPLY =~ ^[Nn]$ ]]; then
                 # Store in Keychain
                 echo -e "${CYAN}Storing API key in Keychain...${RESET}"
-                security add-generic-password -s "bluesound-controller" -a "unifi-api-key" -w "$UNIFI_API_KEY" -U 2>/dev/null
+                security add-generic-password -s "bluos-controller" -a "unifi-api-key" -w "$UNIFI_API_KEY" -U 2>/dev/null
                 if [ $? -eq 0 ]; then
                     echo -e "${GREEN}✓ API key stored in Keychain${RESET}"
                     # Don't store in config.json if stored in Keychain

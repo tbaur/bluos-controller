@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Network I/O operations for Bluesound Controller.
+Network I/O operations for BluOS Controller.
 
 Copyright 2025 tbaur
 
@@ -26,7 +26,7 @@ from typing import Optional, Dict
 
 from constants import DEFAULT_TIMEOUT, MAX_XML_SIZE, MAX_RETRIES, RETRY_DELAY_BASE, MAX_RETRY_DELAY
 
-logger = logging.getLogger("Bluesound")
+logger = logging.getLogger("BluOS")
 
 
 def _url_for_log(url: str) -> str:

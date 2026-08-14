@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bluesound Unified Controller - Main entry point.
+BluOS Unified Controller - Main entry point.
 
 Copyright 2025 tbaur
 
@@ -24,13 +24,13 @@ import re
 from pathlib import Path
 
 # Setup logging before other imports
-debug_mode = os.environ.get("BLUESOUND_DEBUG") == "1"
-structured_logging = os.environ.get("BLUESOUND_STRUCTURED_LOG") == "1"
+debug_mode = os.environ.get("BLUOS_DEBUG") == "1"
+structured_logging = os.environ.get("BLUOS_STRUCTURED_LOG") == "1"
 from utils import setup_logging
 logger = setup_logging(debug=debug_mode, structured=structured_logging)
 
-from controller import BluesoundController
-from cli import BluesoundCLI
+from controller import BluOSController
+from cli import BluOSCLI
 
 
 def run_tests_and_update_docs() -> None:
@@ -55,9 +55,9 @@ def run_tests_and_update_docs() -> None:
     else:
         # If not found, try common locations
         possible_roots = [
-            Path.home() / "github" / "tbaur" / "bluesound-controller",
-            Path.home() / "github" / "bluesound-controller",
-            Path.home() / ".config" / "bluesound-controller",
+            Path.home() / "github" / "tbaur" / "bluos-controller",
+            Path.home() / "github" / "bluos-controller",
+            Path.home() / ".config" / "bluos-controller",
             Path(__file__).parent,
         ]
         for root in possible_roots:
@@ -234,7 +234,7 @@ def main() -> None:
         return
     
     if len(sys.argv) == 1 or sys.argv[1] in ['-h', '--help']:
-        BluesoundCLI(None).print_help()  # type: ignore
+        BluOSCLI(None).print_help()  # type: ignore
         sys.exit(0)
     
     p = argparse.ArgumentParser(add_help=False)
@@ -323,8 +323,8 @@ def main() -> None:
     
     args = p.parse_args()
     
-    ctl = BluesoundController()
-    cli = BluesoundCLI(ctl)
+    ctl = BluOSController()
+    cli = BluOSCLI(ctl)
     
     # Skip network discovery for commands that don't need it
     if args.command == "keychain":

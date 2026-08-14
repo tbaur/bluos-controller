@@ -5,8 +5,8 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from argparse import Namespace
 
-from cli import BluesoundCLI
-from controller import BluesoundController
+from cli import BluOSCLI
+from controller import BluOSController
 from models import PlayerStatus
 
 
@@ -17,14 +17,14 @@ class TestMultiDeviceSupport:
     def controller(self):
         """Create controller instance with multiple devices."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             ctl.ips = ["192.168.1.100", "192.168.1.101", "192.168.1.102"]
             return ctl
     
     @pytest.fixture
     def cli(self, controller):
         """Create CLI instance."""
-        return BluesoundCLI(controller)
+        return BluOSCLI(controller)
     
     @pytest.fixture
     def mock_devices(self):

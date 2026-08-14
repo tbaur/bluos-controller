@@ -15,10 +15,10 @@ We aim to acknowledge within 48 hours and provide an initial assessment within 7
 
 When using this tool:
 
-- **API keys**: Store in macOS Keychain via `bluesound-controller keychain set` (not plaintext config)
+- **API keys**: Store in macOS Keychain via `bluos-controller keychain set` (not plaintext config)
 - **Config files**: Never commit `config.json` to version control
 - **Network scope**: All communication is local network only (no external API calls except optional UniFi)
-- **Permissions**: Only requires read/write to `~/.config/bluesound-controller`; no sudo needed
+- **Permissions**: Only requires read/write to `~/.config/bluos-controller`; no sudo needed
 
 ## Security Measures
 
@@ -36,4 +36,4 @@ When using this tool:
 
 ## Known Considerations
 
-- **SSL verification disabled** for local Bluesound device communication. These are local IoT devices without valid certificates. This is intentional and documented.
+- **SSL verification disabled** for local BluOS device communication. These are local IoT devices without valid certificates. This is intentional and documented.
