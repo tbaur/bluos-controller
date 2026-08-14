@@ -41,7 +41,7 @@ bluos-controller --help            # Full command reference
 
 All device commands load discovery (cache by default). `status` and `sync` accept `--scan` to force a rescan; other commands auto-rescan once if every cached endpoint is dead. Target all devices (default), a name, or a pattern.
 
-NAD CI / multi-zone players (e.g. CI S2) advertise secondary zones on `_musp._tcp` with non-default ports (`11010+`). Those zones appear as separate `ip:port` endpoints alongside the primary on `11000`.
+NAD multi-zone players (e.g. NAD CI S2 or CI 580 V2) advertise secondary zones on `_musp._tcp` with non-default ports (`11010+`). Those zones appear as separate `ip:port` endpoints alongside the primary on `11000`.
 
 ## Configuration
 
@@ -96,4 +96,6 @@ rm ~/local/bin/bluos-controller
 
 ## License
 
-Copyright 2026 tbaur. Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
+Copyright 2026 tbaur.
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
