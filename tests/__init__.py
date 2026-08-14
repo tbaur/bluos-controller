@@ -1,2 +1,2 @@
-"""Test suite for Bluesound Controller."""
+"""Test suite for BluOS Controller."""
 

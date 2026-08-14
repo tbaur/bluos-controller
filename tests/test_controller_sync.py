@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from controller import (
-    BluesoundController,
+    BluOSController,
     parse_bluos_host,
     parse_bluos_endpoint,
     parse_sync_status_root,
@@ -90,7 +90,7 @@ class TestCollectSyncBreakOperations:
     @pytest.fixture
     def controller(self):
         with patch("controller.Config"):
-            return BluesoundController()
+            return BluOSController()
 
     def test_break_all_from_primary(self, controller):
         devices = [

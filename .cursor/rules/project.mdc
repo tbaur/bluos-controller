@@ -1,0 +1,21 @@
+---
+description: BluOS Controller project identity and naming
+alwaysApply: true
+---
+
+# BluOS Controller
+
+This repository is **BluOS Controller**. Use these names only:
+
+| Kind | Name |
+|------|------|
+| Product | BluOS Controller |
+| GitHub / package / CLI | `bluos-controller` |
+| Classes | `BluOSController`, `BluOSCLI` |
+| Logger | `BluOS` |
+| Env vars | `BLUOS_DEBUG`, `BLUOS_STRUCTURED_LOG` |
+| Config / logs | `~/.config/bluos-controller/` |
+| Keychain service | `bluos-controller` |
+| Temp discovery files | `.bluos-tmp-discovery-*` |
+
+Do not introduce other product or package names. The official API PDF host `bluesoundprofessional.com` is an external vendor URL and must stay unchanged.

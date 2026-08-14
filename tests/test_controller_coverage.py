@@ -7,7 +7,7 @@ import json
 import time
 from unittest.mock import patch, MagicMock, mock_open
 
-from controller import BluesoundController
+from controller import BluOSController
 from constants import CACHE_FILE, DISCOVERY_MDNS, DISCOVERY_LSDP, DISCOVERY_BOTH
 
 
@@ -26,7 +26,7 @@ class TestControllerCoverage:
     @pytest.fixture
     def controller(self):
         """Create controller instance."""
-        return BluesoundController()
+        return BluOSController()
     
     def test_discover_no_valid_devices(self, controller):
         """Test discover when no valid devices found."""

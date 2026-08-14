@@ -1,11 +1,11 @@
-# Bluesound Controller
+# BluOS Controller
 
-[![Tests](https://github.com/tbaur/bluesound-controller/actions/workflows/test.yml/badge.svg)](https://github.com/tbaur/bluesound-controller/actions/workflows/test.yml)
+[![Tests](https://github.com/tbaur/bluos-controller/actions/workflows/test.yml/badge.svg)](https://github.com/tbaur/bluos-controller/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![macOS](https://img.shields.io/badge/macOS-10.15%2B-lightgrey.svg)](https://www.apple.com/macos/)
 
-Command-line controller for Bluesound devices on macOS. Pure Python standard library.
+Command-line controller for BluOS devices on macOS. Pure Python standard library.
 
 ## Quick Start
 
@@ -14,15 +14,15 @@ Command-line controller for Bluesound devices on macOS. Pure Python standard lib
 ./install.sh
 ```
 
-This installs to `~/.config/bluesound-controller` and creates a symlink at `~/local/bin/bluesound-controller`.
+This installs to `~/.config/bluos-controller` and creates a symlink at `~/local/bin/bluos-controller`.
 
 ```bash
-bluesound-controller discover          # Find devices (mDNS + CI zones)
-bluesound-controller status            # Show all device status
-bluesound-controller status --scan     # Force rediscovery, then status
-bluesound-controller volume 25         # Set volume
-bluesound-controller play "Kitchen"    # Play on specific device
-bluesound-controller --help            # Full command reference
+bluos-controller discover          # Find devices (mDNS + CI zones)
+bluos-controller status            # Show all device status
+bluos-controller status --scan     # Force rediscovery, then status
+bluos-controller volume 25         # Set volume
+bluos-controller play "Kitchen"    # Play on specific device
+bluos-controller --help            # Full command reference
 ```
 
 ## Features
@@ -45,7 +45,7 @@ NAD CI / multi-zone players (e.g. CI S2) advertise secondary zones on `_musp._tc
 
 ## Configuration
 
-Stored in `~/.config/bluesound-controller/config.json`:
+Stored in `~/.config/bluos-controller/config.json`:
 
 ```json
 {
@@ -69,9 +69,9 @@ mDNS always browses `_musc._tcp` (primary players) and `_musp._tcp` (CI secondar
 Store your API key in macOS Keychain instead of plaintext config:
 
 ```bash
-bluesound-controller keychain set      # Store key
-bluesound-controller keychain get      # Check status
-bluesound-controller keychain delete   # Remove key
+bluos-controller keychain set      # Store key
+bluos-controller keychain get      # Check status
+bluos-controller keychain delete   # Remove key
 ```
 
 Keychain values take precedence over `config.json`.
@@ -84,8 +84,8 @@ Keychain values take precedence over `config.json`.
 ## Uninstall
 
 ```bash
-rm -rf ~/.config/bluesound-controller
-rm ~/local/bin/bluesound-controller
+rm -rf ~/.config/bluos-controller
+rm ~/local/bin/bluos-controller
 ```
 
 ## Documentation

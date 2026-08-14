@@ -1,8 +1,8 @@
-# Bluesound Controller - Detailed Documentation
+# BluOS Controller - Detailed Documentation
 
 > **Note**: This is the detailed documentation. For a quick start guide, see the [main README.md](../README.md).
 
-A production-ready, unified command-line controller for Bluesound devices on macOS.
+A production-ready, unified command-line controller for BluOS devices on macOS.
 
 Current line: multi-zone discovery (`ip:port`, `_musc` + `_musp` for CI secondary zones). Released version is tagged; see [CHANGELOG.md](../CHANGELOG.md).
 
@@ -240,21 +240,21 @@ Run the installation script from the repository:
 ```
 
 The script will:
-- Copy files to `~/.config/bluesound-controller`
+- Copy files to `~/.config/bluos-controller`
 - Prompt for configuration settings (UniFi integration, etc.)
 - Create `config.json` with your settings
-- Create a symlink `~/local/bin/bluesound-controller` (add to PATH if needed)
+- Create a symlink `~/local/bin/bluos-controller` (add to PATH if needed)
 
 ### Manual Installation
 
-1. Clone or copy this repository to `~/.config/bluesound-controller`
+1. Clone or copy this repository to `~/.config/bluos-controller`
 2. Ensure Python 3.10+ is installed
 3. Make `main.py` executable: `chmod +x main.py`
 4. Create `config.json` (see Configuration section)
 
 ## Configuration
 
-Configuration is stored in `~/.config/bluesound-controller/config.json` (JSON format is preferred, but INI format is also supported for backward compatibility).
+Configuration is stored in `~/.config/bluos-controller/config.json` (JSON format is preferred, but INI format is also supported for backward compatibility).
 
 ### Basic Configuration
 
@@ -297,13 +297,13 @@ To enable UniFi integration for network statistics, set:
 
 ```bash
 # Store API key in Keychain
-bluesound-controller keychain set
+bluos-controller keychain set
 
 # Check if API key is stored
-bluesound-controller keychain get
+bluos-controller keychain get
 
 # Remove API key from Keychain
-bluesound-controller keychain delete
+bluos-controller keychain delete
 ```
 
 **How it works:**
@@ -322,7 +322,7 @@ bluesound-controller keychain delete
 
 ## Usage
 
-After installation, use the `bluesound-controller` command:
+After installation, use the `bluos-controller` command:
 
 **Note**: Most commands support controlling all devices (default) or specific devices by name. Device names can be:
 - Exact match: `"Living Room"`
@@ -332,47 +332,47 @@ After installation, use the `bluesound-controller` command:
 ### Discover Devices
 
 ```bash
-bluesound-controller discover
+bluos-controller discover
 ```
 
 ### Status Report
 
 ```bash
 # All devices
-bluesound-controller status
+bluos-controller status
 
 # Filter by name
-bluesound-controller status "Living Room"
+bluos-controller status "Living Room"
 
 # Force fresh scan
-bluesound-controller status --scan
+bluos-controller status --scan
 
 # JSON output
-bluesound-controller status --json
+bluos-controller status --json
 ```
 
 ### Volume Control
 
 ```bash
 # List current volumes
-bluesound-controller volume
+bluos-controller volume
 
 # Set absolute volume
-bluesound-controller volume 20
+bluos-controller volume 20
 
 # Adjust volume
-bluesound-controller volume +5
-bluesound-controller volume -10
+bluos-controller volume +5
+bluos-controller volume -10
 
 # Mute/Unmute
-bluesound-controller volume mute
-bluesound-controller volume unmute
+bluos-controller volume mute
+bluos-controller volume unmute
 
 # Reset to safe volume
-bluesound-controller volume reset
+bluos-controller volume reset
 
 # Target specific device
-bluesound-controller volume 25 "Living Room"
+bluos-controller volume 25 "Living Room"
 ```
 
 ### Playback Control
@@ -381,19 +381,19 @@ All playback commands support controlling all devices (default) or specific devi
 
 ```bash
 # All devices (default)
-bluesound-controller play
-bluesound-controller pause
-bluesound-controller stop
-bluesound-controller skip
-bluesound-controller previous
-bluesound-controller toggle
+bluos-controller play
+bluos-controller pause
+bluos-controller stop
+bluos-controller skip
+bluos-controller previous
+bluos-controller toggle
 
 # Specific device
-bluesound-controller play "Living Room"
-bluesound-controller pause "Kitchen"
+bluos-controller play "Living Room"
+bluos-controller pause "Kitchen"
 
 # Pattern matching (multiple devices)
-bluesound-controller play "Room"  # Matches "Living Room", "Bedroom", etc.
+bluos-controller play "Room"  # Matches "Living Room", "Bedroom", etc.
 ```
 
 ### Queue Management
@@ -402,20 +402,20 @@ Queue commands support all devices or specific devices:
 
 ```bash
 # Show queue for all devices
-bluesound-controller queue
+bluos-controller queue
 
 # Show queue for specific device
-bluesound-controller queue "Living Room"
+bluos-controller queue "Living Room"
 
 # Clear queue on all devices
-bluesound-controller queue clear
+bluos-controller queue clear
 
 # Clear queue on specific device
-bluesound-controller queue clear "Kitchen"
+bluos-controller queue clear "Kitchen"
 
 # Move track in queue (all or specific)
-bluesound-controller queue move 3 1          # All devices
-bluesound-controller queue move 3 1 "Living Room"  # Specific device
+bluos-controller queue move 3 1          # All devices
+bluos-controller queue move 3 1 "Living Room"  # Specific device
 ```
 
 ### Input Source Selection
@@ -424,17 +424,17 @@ Input commands support all devices or specific devices:
 
 ```bash
 # List inputs for all devices
-bluesound-controller inputs
+bluos-controller inputs
 
 # List inputs for specific device
-bluesound-controller inputs "Living Room"
+bluos-controller inputs "Living Room"
 
 # Set input on all devices
-bluesound-controller inputs "" "Bluetooth"
+bluos-controller inputs "" "Bluetooth"
 
 # Set input on specific device
-bluesound-controller inputs "Living Room" "Bluetooth"
-bluesound-controller inputs "Kitchen" "Optical 1"
+bluos-controller inputs "Living Room" "Bluetooth"
+bluos-controller inputs "Kitchen" "Optical 1"
 ```
 
 ### Bluetooth Mode Control
@@ -443,19 +443,19 @@ Bluetooth commands support all devices or specific devices:
 
 ```bash
 # Show Bluetooth mode for all devices
-bluesound-controller bluetooth
+bluos-controller bluetooth
 
 # Show mode for specific device
-bluesound-controller bluetooth "Living Room"
+bluos-controller bluetooth "Living Room"
 
 # Set mode on all devices
-bluesound-controller bluetooth "" auto
+bluos-controller bluetooth "" auto
 
 # Set mode on specific device
-bluesound-controller bluetooth "Living Room" manual
-bluesound-controller bluetooth "Kitchen" auto
-bluesound-controller bluetooth "Bedroom" guest
-bluesound-controller bluetooth "Office" disable
+bluos-controller bluetooth "Living Room" manual
+bluos-controller bluetooth "Kitchen" auto
+bluos-controller bluetooth "Bedroom" guest
+bluos-controller bluetooth "Office" disable
 ```
 
 ### Preset Management
@@ -464,16 +464,16 @@ Preset commands support all devices or specific devices:
 
 ```bash
 # List presets for all devices
-bluesound-controller presets
+bluos-controller presets
 
 # List presets for specific device
-bluesound-controller presets "Living Room"
+bluos-controller presets "Living Room"
 
 # Play preset on all devices
-bluesound-controller presets "" 1
+bluos-controller presets "" 1
 
 # Play preset on specific device
-bluesound-controller presets "Living Room" 1
+bluos-controller presets "Living Room" 1
 ```
 
 ### Sync Group Management
@@ -482,19 +482,19 @@ Runtime BluOS groups use the **primary** player to attach or detach slaves.
 
 ```bash
 # Create sync group (Living Room primary, Kitchen + Bedroom slaves)
-bluesound-controller sync create "Living Room Speakers" "Kitchen Speakers,Bedroom Speakers"
+bluos-controller sync create "Living Room Speakers" "Kitchen Speakers,Bedroom Speakers"
 
 # Break all runtime groups
-bluesound-controller sync break
+bluos-controller sync break
 
 # Refresh discovery, then list groups
-bluesound-controller sync list --scan
+bluos-controller sync list --scan
 
 # Break groups involving a specific player (primary or slave)
-bluesound-controller sync break "Kitchen Speakers"
+bluos-controller sync break "Kitchen Speakers"
 
 # List sync groups and standalone players
-bluesound-controller sync list
+bluos-controller sync list
 ```
 
 `sync list` reads `/SyncStatus` from each player and shows:
@@ -508,7 +508,7 @@ Ungrouping always sends `RemoveSlave` to the **primary**, matching BluOS runtime
 ### Device Diagnostics
 
 ```bash
-bluesound-controller diagnose "Device Name"
+bluos-controller diagnose "Device Name"
 ```
 
 ### Keychain Management (macOS)
@@ -517,13 +517,13 @@ Manage UniFi API key storage in macOS Keychain:
 
 ```bash
 # Store API key in Keychain (prompts for password)
-bluesound-controller keychain set
+bluos-controller keychain set
 
 # Check API key status
-bluesound-controller keychain get
+bluos-controller keychain get
 
 # Remove API key from Keychain
-bluesound-controller keychain delete
+bluos-controller keychain delete
 ```
 
 **Note**: Keychain operations are macOS-only and don't require network discovery, making them fast and efficient.
@@ -534,16 +534,16 @@ Reboot commands support all devices or specific devices:
 
 ```bash
 # Hard reboot all devices
-bluesound-controller reboot
+bluos-controller reboot
 
 # Hard reboot specific device
-bluesound-controller reboot "Living Room"
+bluos-controller reboot "Living Room"
 
 # Soft reboot all devices
-bluesound-controller reboot --soft
+bluos-controller reboot --soft
 
 # Soft reboot specific device
-bluesound-controller reboot --soft "Kitchen"
+bluos-controller reboot --soft "Kitchen"
 ```
 
 ## Debug Mode & Logging
@@ -553,19 +553,19 @@ bluesound-controller reboot --soft "Kitchen"
 Enable debug logging by setting the environment variable:
 
 ```bash
-export BLUESOUND_DEBUG=1
-bluesound-controller status
+export BLUOS_DEBUG=1
+bluos-controller status
 ```
 
-Debug logs are written to `~/.config/bluesound-controller/bluesound-controller.log`
+Debug logs are written to `~/.config/bluos-controller/bluos-controller.log`
 
 ### Structured Logging (JSON Format)
 
 Enable JSON-formatted structured logging for better log parsing and analysis:
 
 ```bash
-export BLUESOUND_STRUCTURED_LOG=1
-bluesound-controller status
+export BLUOS_STRUCTURED_LOG=1
+bluos-controller status
 ```
 
 Structured logs include:
@@ -582,13 +582,13 @@ This format is ideal for log aggregation systems, monitoring tools, and automate
 
 - **Python**: 3.10+ (uses only standard library - no external dependencies)
 - **Operating System**: macOS (uses `dns-sd` and `dscacheutil` for mDNS discovery)
-- **Network**: Access to Bluesound devices on local network
+- **Network**: Access to BluOS devices on local network
 - **Optional**: UniFi Controller (for network statistics integration)
 
 ## Project Structure
 
 ```
-bluesound-controller/
+bluos-controller/
 ├── main.py              # Entry point
 ├── constants.py         # Constants and configuration
 ├── models.py            # Data models
@@ -629,7 +629,7 @@ bluesound-controller/
 
 **Easy Method (Recommended):**
 ```bash
-bluesound-controller --run-code-tests
+bluos-controller --run-code-tests
 ```
 This command will:
 - Run all tests with coverage
@@ -760,8 +760,8 @@ The codebase is organized into modular components:
 
 ## Environment Variables
 
-- `BLUESOUND_DEBUG=1`: Enable debug logging
-- `BLUESOUND_STRUCTURED_LOG=1`: Enable JSON structured logging format
+- `BLUOS_DEBUG=1`: Enable debug logging
+- `BLUOS_STRUCTURED_LOG=1`: Enable JSON structured logging format
 
 ## Troubleshooting
 
@@ -770,12 +770,12 @@ The codebase is organized into modular components:
 1. **Check Network Connectivity**: Ensure devices are on the same network
 2. **Try Different Discovery Method**: 
    ```bash
-   # Edit ~/.config/bluesound-controller/config.json
+   # Edit ~/.config/bluos-controller/config.json
    # Change "DISCOVERY_METHOD" to "lsdp" or "both"
    ```
 3. **Force Fresh Discovery**: Use `--scan` flag
    ```bash
-   bluesound-controller status --scan
+   bluos-controller status --scan
    ```
 4. **Check Firewall**: Ensure UDP port 11430 (LSDP) and mDNS are not blocked
 
@@ -799,9 +799,9 @@ The codebase is organized into modular components:
 
 ### Logging
 
-- **Debug Mode**: Set `BLUESOUND_DEBUG=1` for detailed logging
-- **Structured Logs**: Set `BLUESOUND_STRUCTURED_LOG=1` for JSON-formatted logs
-- **Log Location**: `~/.config/bluesound-controller/bluesound-controller.log`
+- **Debug Mode**: Set `BLUOS_DEBUG=1` for detailed logging
+- **Structured Logs**: Set `BLUOS_STRUCTURED_LOG=1` for JSON-formatted logs
+- **Log Location**: `~/.config/bluos-controller/bluos-controller.log`
 
 ## Version
 

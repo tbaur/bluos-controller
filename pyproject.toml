@@ -3,9 +3,9 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bluesound-controller"
+name = "bluos-controller"
 version = "1.4.0"
-description = "A command-line controller for Bluesound devices on macOS"
+description = "A command-line controller for BluOS devices on macOS"
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -25,7 +25,7 @@ classifiers = [
 ]
 
 [project.scripts]
-bluesound-controller = "main:main"
+bluos-controller = "main:main"
 
 [tool.setuptools]
 py-modules = [
@@ -43,9 +43,9 @@ py-modules = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tbaur/bluesound-controller"
-Repository = "https://github.com/tbaur/bluesound-controller"
-Issues = "https://github.com/tbaur/bluesound-controller/issues"
+Homepage = "https://github.com/tbaur/bluos-controller"
+Repository = "https://github.com/tbaur/bluos-controller"
+Issues = "https://github.com/tbaur/bluos-controller/issues"
 
 [tool.mypy]
 python_version = "3.10"

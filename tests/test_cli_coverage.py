@@ -5,8 +5,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from concurrent.futures import as_completed
 
-from cli import BluesoundCLI
-from controller import BluesoundController
+from cli import BluOSCLI
+from controller import BluOSController
 from models import PlayerStatus
 from constants import MAX_WORKERS_DISCOVERY
 
@@ -17,8 +17,8 @@ class TestCLICoverage:
     @pytest.fixture
     def cli(self):
         """Create CLI instance."""
-        ctl = BluesoundController()
-        return BluesoundCLI(ctl)
+        ctl = BluOSController()
+        return BluOSCLI(ctl)
     
     def test_status_no_ips(self, cli):
         """Test status with no IPs."""

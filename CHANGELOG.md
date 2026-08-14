@@ -9,66 +9,66 @@ From 1.1.1 onward this file is maintained automatically by
 [release-please](https://github.com/googleapis/release-please) based on
 [Conventional Commits](https://www.conventionalcommits.org). See [RELEASING.md](RELEASING.md).
 
-## [1.4.0](https://github.com/tbaur/bluesound-controller/compare/v1.3.0...v1.4.0) (2026-08-11)
+## [1.4.0](https://github.com/tbaur/bluos-controller/compare/v1.3.0...v1.4.0) (2026-08-11)
 
 
 ### Features
 
-* **unifi:** use switch port rates for wired clients ([#40](https://github.com/tbaur/bluesound-controller/issues/40)) ([54a0c2a](https://github.com/tbaur/bluesound-controller/commit/54a0c2a0c06759258de4e2f3836624ed0bdf1f61))
+* **unifi:** use switch port rates for wired clients ([#40](https://github.com/tbaur/bluos-controller/issues/40)) ([54a0c2a](https://github.com/tbaur/bluos-controller/commit/54a0c2a0c06759258de4e2f3836624ed0bdf1f61))
 
-## [1.3.0](https://github.com/tbaur/bluesound-controller/compare/v1.2.1...v1.3.0) (2026-08-01)
-
-
-### Features
-
-* **discovery:** multi-zone endpoints, faster polls, orphan sync break ([af9701c](https://github.com/tbaur/bluesound-controller/commit/af9701cb362b273a0705f56150aded1df9c12121))
-
-
-### Bug Fixes
-
-* **types:** TypeGuard BluOS response checks for mypy ([#38](https://github.com/tbaur/bluesound-controller/issues/38)) ([c8e9b42](https://github.com/tbaur/bluesound-controller/commit/c8e9b4269699202762468a318bd249e662c192a2))
-
-## [1.2.1](https://github.com/tbaur/bluesound-controller/compare/v1.2.0...v1.2.1) (2026-07-12)
-
-
-### Bug Fixes
-
-* **api:** align BluOS queue/inputs/bluetooth with Custom Integration API v1.7 ([#32](https://github.com/tbaur/bluesound-controller/issues/32)) ([7e3a002](https://github.com/tbaur/bluesound-controller/commit/7e3a002094cb49b9756f6541ee75625e44025aeb))
-
-## [1.2.0](https://github.com/tbaur/bluesound-controller/compare/v1.1.4...v1.2.0) (2026-07-12)
+## [1.3.0](https://github.com/tbaur/bluos-controller/compare/v1.2.1...v1.3.0) (2026-08-01)
 
 
 ### Features
 
-* **sync:** enable-all group + stop after break ([#30](https://github.com/tbaur/bluesound-controller/issues/30)) ([1cea2d7](https://github.com/tbaur/bluesound-controller/commit/1cea2d7fc49e6b4633a07c941e9a7b171d13ae9a))
-
-## [1.1.4](https://github.com/tbaur/bluesound-controller/compare/v1.1.3...v1.1.4) (2026-07-12)
+* **discovery:** multi-zone endpoints, faster polls, orphan sync break ([af9701c](https://github.com/tbaur/bluos-controller/commit/af9701cb362b273a0705f56150aded1df9c12121))
 
 
 ### Bug Fixes
 
-* **sync:** prefer SyncStatus volume over Status for grouped players ([#28](https://github.com/tbaur/bluesound-controller/issues/28)) ([6f34cb9](https://github.com/tbaur/bluesound-controller/commit/6f34cb99386565420a5e98a492ca1afc009e4044))
+* **types:** TypeGuard BluOS response checks for mypy ([#38](https://github.com/tbaur/bluos-controller/issues/38)) ([c8e9b42](https://github.com/tbaur/bluos-controller/commit/c8e9b4269699202762468a318bd249e662c192a2))
 
-## [1.1.3](https://github.com/tbaur/bluesound-controller/compare/v1.1.2...v1.1.3) (2026-07-12)
-
-
-### Bug Fixes
-
-* **security:** isolate UniFi API key from Config.get ([#26](https://github.com/tbaur/bluesound-controller/issues/26)) ([dfdaa94](https://github.com/tbaur/bluesound-controller/commit/dfdaa948836e448cfc72e3763b725791caa393ad))
-
-## [1.1.2](https://github.com/tbaur/bluesound-controller/compare/v1.1.1...v1.1.2) (2026-07-12)
+## [1.2.1](https://github.com/tbaur/bluos-controller/compare/v1.2.0...v1.2.1) (2026-07-12)
 
 
 ### Bug Fixes
 
-* **sync:** parse SyncStatus and improve grouped status output ([#24](https://github.com/tbaur/bluesound-controller/issues/24)) ([47e0800](https://github.com/tbaur/bluesound-controller/commit/47e08001234b4996941fec8c578e98ada740186e))
+* **api:** align BluOS queue/inputs/bluetooth with Custom Integration API v1.7 ([#32](https://github.com/tbaur/bluos-controller/issues/32)) ([7e3a002](https://github.com/tbaur/bluos-controller/commit/7e3a002094cb49b9756f6541ee75625e44025aeb))
 
-## [1.1.1](https://github.com/tbaur/bluesound-controller/compare/v1.1.0...v1.1.1) (2026-07-12)
+## [1.2.0](https://github.com/tbaur/bluos-controller/compare/v1.1.4...v1.2.0) (2026-07-12)
+
+
+### Features
+
+* **sync:** enable-all group + stop after break ([#30](https://github.com/tbaur/bluos-controller/issues/30)) ([1cea2d7](https://github.com/tbaur/bluos-controller/commit/1cea2d7fc49e6b4633a07c941e9a7b171d13ae9a))
+
+## [1.1.4](https://github.com/tbaur/bluos-controller/compare/v1.1.3...v1.1.4) (2026-07-12)
 
 
 ### Bug Fixes
 
-* **license:** restore canonical Apache 2.0 LICENSE text ([418aa25](https://github.com/tbaur/bluesound-controller/commit/418aa250a6b9910bbdddfc6d92c24b54e078db27))
+* **sync:** prefer SyncStatus volume over Status for grouped players ([#28](https://github.com/tbaur/bluos-controller/issues/28)) ([6f34cb9](https://github.com/tbaur/bluos-controller/commit/6f34cb99386565420a5e98a492ca1afc009e4044))
+
+## [1.1.3](https://github.com/tbaur/bluos-controller/compare/v1.1.2...v1.1.3) (2026-07-12)
+
+
+### Bug Fixes
+
+* **security:** isolate UniFi API key from Config.get ([#26](https://github.com/tbaur/bluos-controller/issues/26)) ([dfdaa94](https://github.com/tbaur/bluos-controller/commit/dfdaa948836e448cfc72e3763b725791caa393ad))
+
+## [1.1.2](https://github.com/tbaur/bluos-controller/compare/v1.1.1...v1.1.2) (2026-07-12)
+
+
+### Bug Fixes
+
+* **sync:** parse SyncStatus and improve grouped status output ([#24](https://github.com/tbaur/bluos-controller/issues/24)) ([47e0800](https://github.com/tbaur/bluos-controller/commit/47e08001234b4996941fec8c578e98ada740186e))
+
+## [1.1.1](https://github.com/tbaur/bluos-controller/compare/v1.1.0...v1.1.1) (2026-07-12)
+
+
+### Bug Fixes
+
+* **license:** restore canonical Apache 2.0 LICENSE text ([418aa25](https://github.com/tbaur/bluos-controller/commit/418aa250a6b9910bbdddfc6d92c24b54e078db27))
 
 ## [1.1.0] - 2026-06-24
 
@@ -92,7 +92,7 @@ From 1.1.1 onward this file is maintained automatically by
 
 ### Initial Release
 
-Production-ready command-line controller for Bluesound devices on macOS.
+Production-ready command-line controller for BluOS devices on macOS.
 
 ### Features
 
@@ -169,7 +169,7 @@ Production-ready command-line controller for Bluesound devices on macOS.
 
 - **Retry Logic**: Automatic retry with exponential backoff for network failures
 - **Rate Limiting**: Per-device rate limiting to prevent overwhelming devices
-- **Structured Logging**: JSON-formatted logs via `BLUESOUND_STRUCTURED_LOG=1`
+- **Structured Logging**: JSON-formatted logs via `BLUOS_STRUCTURED_LOG=1`
 - **Error Recovery**: Graceful degradation when optional services fail
 - **UniFi Integration**: Optional network statistics from UniFi Controller
 
@@ -192,6 +192,6 @@ Production-ready command-line controller for Bluesound devices on macOS.
 - Python 3.10+ (standard library only)
 - macOS 10.15+ (uses `dns-sd` and `dscacheutil`)
 
-[Unreleased]: https://github.com/tbaur/bluesound-controller/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/tbaur/bluesound-controller/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/tbaur/bluesound-controller/releases/tag/v1.0.0
+[Unreleased]: https://github.com/tbaur/bluos-controller/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/tbaur/bluos-controller/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/tbaur/bluos-controller/releases/tag/v1.0.0

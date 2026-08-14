@@ -1,5 +1,5 @@
 """
-Integration tests for Bluesound Controller.
+Integration tests for BluOS Controller.
 """
 import pytest
 import json
@@ -7,8 +7,8 @@ import os
 import time
 from unittest.mock import patch, MagicMock
 
-from controller import BluesoundController
-from cli import BluesoundCLI
+from controller import BluOSController
+from cli import BluOSCLI
 from models import PlayerStatus
 
 
@@ -20,16 +20,16 @@ class TestIntegration:
         """Create controller for integration tests."""
         with patch('controller.CACHE_FILE', os.path.join(temp_config_dir, "cache.json")), \
              patch('controller.UNIFI_CACHE_FILE', os.path.join(temp_config_dir, "unifi.json")):
-            return BluesoundController()
+            return BluOSController()
     
     @pytest.fixture
     def cli(self, controller):
         """Create CLI for integration tests."""
-        return BluesoundCLI(controller)
+        return BluOSCLI(controller)
     
     @patch('controller.Network.get', return_value=b'<SyncStatus name="ok"/>')
-    @patch('controller.BluesoundController._discover_mdns')
-    @patch('controller.BluesoundController._discover_lsdp')
+    @patch('controller.BluOSController._discover_mdns')
+    @patch('controller.BluOSController._discover_lsdp')
     def test_full_discovery_flow(
         self, mock_lsdp, mock_mdns, _mock_net, controller, temp_config_dir
     ):

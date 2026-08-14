@@ -8,20 +8,20 @@ import time
 from unittest.mock import patch, MagicMock, Mock, mock_open
 import xml.etree.ElementTree as ET
 
-from controller import BluesoundController
+from controller import BluOSController
 from models import PlayerStatus, UniFiClient
 from constants import CACHE_FILE, UNIFI_CACHE_FILE
 
 
-class TestBluesoundController:
-    """Test BluesoundController class."""
+class TestBluOSController:
+    """Test BluOSController class."""
     
     @pytest.fixture
     def controller(self, temp_config_dir):
         """Create a controller instance for testing."""
         with patch('controller.CACHE_FILE', os.path.join(temp_config_dir, "cache.json")), \
              patch('controller.UNIFI_CACHE_FILE', os.path.join(temp_config_dir, "unifi.json")):
-            return BluesoundController()
+            return BluOSController()
     
     def test_loads_discovery_cache(self, controller, temp_config_dir):
         """Test loading discovery cache."""
@@ -98,7 +98,7 @@ class TestBluesoundController:
     @patch('controller.Network.get')
     def test_get_device_info(self, mock_network, controller):
         """Test getting device information (no /diagnostics by default)."""
-        sync_xml = b'<sync name="Test Speaker" modelName="Node" brand="Bluesound" version="1.0"/>'
+        sync_xml = b'<sync name="Test Speaker" modelName="Node" brand="BluOS" version="1.0"/>'
         status_xml = b'<status><volume>50</volume><state>play</state><service>Library</service></status>'
         
         mock_network.side_effect = [sync_xml, status_xml]
@@ -114,7 +114,7 @@ class TestBluesoundController:
     @patch('controller.Network.get')
     def test_get_device_info_include_uptime(self, mock_network, controller):
         """Status path may request /diagnostics for uptime."""
-        sync_xml = b'<sync name="Test Speaker" modelName="Node" brand="Bluesound" version="1.0"/>'
+        sync_xml = b'<sync name="Test Speaker" modelName="Node" brand="BluOS" version="1.0"/>'
         status_xml = b'<status><volume>50</volume><state>play</state></status>'
         html = b'<html>Uptime: 1 day</html>'
         mock_network.side_effect = [sync_xml, status_xml, html]

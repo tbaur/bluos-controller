@@ -5,7 +5,7 @@ import pytest
 import subprocess
 from unittest.mock import patch, MagicMock, mock_open
 
-from controller import BluesoundController
+from controller import BluOSController
 from constants import DISCOVERY_MDNS, DISCOVERY_LSDP, DISCOVERY_BOTH, CACHE_FILE
 
 
@@ -25,7 +25,7 @@ class TestDiscoveryMethods:
     def controller(self):
         """Create controller instance."""
         with patch('controller.Config'):
-            ctl = BluesoundController()
+            ctl = BluOSController()
             ctl.ips = []
             return ctl
 

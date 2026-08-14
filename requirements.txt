@@ -1,4 +1,4 @@
-# Bluesound Controller - Runtime Dependencies
+# BluOS Controller - Runtime Dependencies
 # This project uses only Python standard library - no external dependencies required
 
 # Python 3.10+ required

@@ -21,7 +21,7 @@ import ipaddress
 import logging
 from typing import Optional
 
-logger = logging.getLogger("Bluesound")
+logger = logging.getLogger("BluOS")
 
 
 def validate_ip(ip: str) -> bool:

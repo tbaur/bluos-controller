@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smoke Test for Bluesound Controller
+Smoke Test for BluOS Controller
 ====================================
 Quick validation that all commands execute without crashing.
 Uses mocked devices to avoid requiring actual hardware.
@@ -27,13 +27,13 @@ from io import StringIO
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from controller import BluesoundController
-from cli import BluesoundCLI
+from controller import BluOSController
+from cli import BluOSCLI
 from models import PlayerStatus
 
 
 class SmokeTest:
-    """Smoke test runner for all Bluesound Controller commands."""
+    """Smoke test runner for all BluOS Controller commands."""
     
     def __init__(self):
         self.passed = 0
@@ -51,9 +51,9 @@ class SmokeTest:
             self.errors.append((name, str(e)))
             print(f"❌ {name}: {e}")
     
-    def setup_mock_controller(self) -> BluesoundController:
+    def setup_mock_controller(self) -> BluOSController:
         """Create a controller with mocked devices."""
-        controller = BluesoundController()
+        controller = BluOSController()
         controller.ips = ['192.168.1.100', '192.168.1.101']
         
         # Mock device info
@@ -61,7 +61,7 @@ class SmokeTest:
             ip='192.168.1.100',
             name='Living Room',
             model='Node',
-            brand='Bluesound',
+            brand='BluOS',
             status='online',
             state='play',
             volume=50,
@@ -75,7 +75,7 @@ class SmokeTest:
             ip='192.168.1.101',
             name='Bedroom',
             model='Pulse',
-            brand='Bluesound',
+            brand='BluOS',
             status='online',
             state='pause',
             volume=30,
@@ -110,7 +110,7 @@ class SmokeTest:
     def test_discover(self) -> None:
         """Test discover command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         # Capture output
         with patch('sys.stdout', new=StringIO()) as fake_out:
@@ -121,7 +121,7 @@ class SmokeTest:
     def test_status_all(self) -> None:
         """Test status command (all devices)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         with patch('sys.stdout', new=StringIO()) as fake_out:
             cli.status(pattern=None, json_mode=False)
@@ -131,7 +131,7 @@ class SmokeTest:
     def test_status_filtered(self) -> None:
         """Test status command (filtered)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         with patch('sys.stdout', new=StringIO()) as fake_out:
             cli.status(pattern='Living', json_mode=False)
@@ -141,7 +141,7 @@ class SmokeTest:
     def test_status_json(self) -> None:
         """Test status command (JSON mode)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         with patch('sys.stdout', new=StringIO()) as fake_out:
             cli.status(pattern=None, json_mode=True)
@@ -151,7 +151,7 @@ class SmokeTest:
     def test_volume_list(self) -> None:
         """Test volume command (list volumes)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = None
@@ -165,7 +165,7 @@ class SmokeTest:
     def test_volume_set(self) -> None:
         """Test volume command (set volume)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = '50'
@@ -179,7 +179,7 @@ class SmokeTest:
     def test_volume_increment(self) -> None:
         """Test volume command (increment)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = '+10'
@@ -193,7 +193,7 @@ class SmokeTest:
     def test_volume_decrement(self) -> None:
         """Test volume command (decrement)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = '-5'
@@ -207,7 +207,7 @@ class SmokeTest:
     def test_volume_mute(self) -> None:
         """Test volume command (mute)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = 'mute'
@@ -221,7 +221,7 @@ class SmokeTest:
     def test_volume_unmute(self) -> None:
         """Test volume command (unmute)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = 'unmute'
@@ -235,7 +235,7 @@ class SmokeTest:
     def test_volume_reset(self) -> None:
         """Test volume command (reset)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.cmd = 'reset'
@@ -249,7 +249,7 @@ class SmokeTest:
     def test_play(self) -> None:
         """Test play command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -262,7 +262,7 @@ class SmokeTest:
     def test_pause(self) -> None:
         """Test pause command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -275,7 +275,7 @@ class SmokeTest:
     def test_stop(self) -> None:
         """Test stop command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -288,7 +288,7 @@ class SmokeTest:
     def test_skip(self) -> None:
         """Test skip command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -301,7 +301,7 @@ class SmokeTest:
     def test_previous(self) -> None:
         """Test previous command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -314,7 +314,7 @@ class SmokeTest:
     def test_toggle(self) -> None:
         """Test toggle command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -327,7 +327,7 @@ class SmokeTest:
     def test_queue_show(self) -> None:
         """Test queue command (show)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'show'
@@ -343,7 +343,7 @@ class SmokeTest:
     def test_queue_clear(self) -> None:
         """Test queue command (clear)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'clear'
@@ -359,7 +359,7 @@ class SmokeTest:
     def test_queue_move(self) -> None:
         """Test queue command (move)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'move'
@@ -375,7 +375,7 @@ class SmokeTest:
     def test_inputs_list(self) -> None:
         """Test inputs command (list)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -389,7 +389,7 @@ class SmokeTest:
     def test_inputs_set(self) -> None:
         """Test inputs command (set input)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -403,7 +403,7 @@ class SmokeTest:
     def test_bluetooth_get(self) -> None:
         """Test bluetooth command (get mode)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -417,7 +417,7 @@ class SmokeTest:
     def test_bluetooth_set(self) -> None:
         """Test bluetooth command (set mode)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -431,7 +431,7 @@ class SmokeTest:
     def test_presets_list(self) -> None:
         """Test presets command (list)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -445,7 +445,7 @@ class SmokeTest:
     def test_presets_play(self) -> None:
         """Test presets command (play preset)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -459,7 +459,7 @@ class SmokeTest:
     def test_sync_create(self) -> None:
         """Test sync command (create)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'create'
@@ -475,7 +475,7 @@ class SmokeTest:
     def test_sync_break(self) -> None:
         """Test sync command (break)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'break'
@@ -491,7 +491,7 @@ class SmokeTest:
     def test_sync_list(self) -> None:
         """Test sync command (list)."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.action = 'list'
@@ -507,7 +507,7 @@ class SmokeTest:
     def test_reboot(self) -> None:
         """Test reboot command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -519,7 +519,7 @@ class SmokeTest:
     def test_soft_reboot(self) -> None:
         """Test soft reboot command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         args = Mock()
         args.target = None
@@ -531,7 +531,7 @@ class SmokeTest:
     def test_diagnose(self) -> None:
         """Test diagnose command."""
         controller = self.setup_mock_controller()
-        cli = BluesoundCLI(controller)
+        cli = BluOSCLI(controller)
         
         with patch('sys.stdout', new=StringIO()) as fake_out:
             cli.diagnose('Living Room')
@@ -540,17 +540,17 @@ class SmokeTest:
     
     def test_help(self) -> None:
         """Test help command."""
-        cli = BluesoundCLI(None)  # type: ignore
+        cli = BluOSCLI(None)  # type: ignore
         
         with patch('sys.stdout', new=StringIO()) as fake_out:
             cli.print_help()
             output = fake_out.getvalue()
-            assert 'Bluesound Controller' in output
+            assert 'BluOS Controller' in output
             assert 'COMMANDS' in output
     
     def run_all(self) -> None:
         """Run all smoke tests."""
-        print("🔥 Running Smoke Tests for Bluesound Controller\n")
+        print("🔥 Running Smoke Tests for BluOS Controller\n")
         print("=" * 60)
         
         # Discovery and Status
