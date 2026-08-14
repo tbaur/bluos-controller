@@ -9,6 +9,13 @@ From 1.1.1 onward this file is maintained automatically by
 [release-please](https://github.com/googleapis/release-please) based on
 [Conventional Commits](https://www.conventionalcommits.org). See [RELEASING.md](RELEASING.md).
 
+## [1.4.1](https://github.com/tbaur/bluos-controller/compare/v1.4.0...v1.4.1) (2026-08-14)
+
+
+### Documentation
+
+* name NAD CI S2 and CI 580 V2 as multi-zone examples ([#44](https://github.com/tbaur/bluos-controller/issues/44)) ([709b07f](https://github.com/tbaur/bluos-controller/commit/709b07f8b209e99fc8f347cf087c1237163fee1c))
+
 ## [1.4.0](https://github.com/tbaur/bluos-controller/compare/v1.3.0...v1.4.0) (2026-08-11)
 
 
