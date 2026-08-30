@@ -31,7 +31,19 @@ git tag + GitHub Release notes only.
    - creates the `vX.Y.Z` git tag,
    - publishes a GitHub Release with the changelog notes.
 
-A release therefore reduces to: merge the code PR(s), then merge the Release PR.
+A release therefore reduces to: merge the code PR(s), approve the Release PR's checks, then merge the Release PR.
+
+## Approve the Release PR checks
+
+The Release PR is authored by `github-actions[bot]`, because `release.yml` passes `github.token` to release-please. GitHub creates its checks but holds them until a user with write access approves.
+
+**Open the Release PR's Checks tab and click "Approve and run" before merging.**
+
+- There is no CLI for this. `POST /actions/runs/{run_id}/approve` is documented for forks from first-time contributors and does not cover this gate.
+- The approval does not stick. It is needed on every release, and again whenever release-please updates an open Release PR.
+- **Merging without approving turns the runs red.** They finalise as `failure` with zero jobs and no logs. That means nobody approved them, not that anything broke.
+
+This gate arrived with GitHub's [bot-created pull requests change](https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/) and reached these repos in late August 2026. It applies to same-repo branches, not just forks, and has no repository-level opt-out. The only way to remove the step is to author the Release PR as a different identity, which needs a GitHub App or a PAT. Neither is set up here, and the click is cheaper.
 
 ## Branch protection
 
@@ -40,9 +52,7 @@ A release therefore reduces to: merge the code PR(s), then merge the Release PR.
 - **Require a pull request before merging** (0 required approvals is fine for a
   solo maintainer).
 - **Block force-pushes and deletions.**
-- **No required status checks on the Release PR.** GitHub does not trigger
-  workflows for PRs opened by the built-in `GITHUB_TOKEN` (loop prevention), so
-  a required check would leave every Release PR permanently unmergeable. Code
+- **No required status checks on the Release PR.** The Release PR's own checks are held for approval, so a required check there would sit unresolved until someone approves it. Code
   PRs still run Tests; review those before merging.
 
 ### Actions permission (required once)
