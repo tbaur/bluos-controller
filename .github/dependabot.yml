@@ -4,6 +4,12 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # init, autobuild, and analyze must move together. Separate PRs fail
+      # CodeQL because it loads one action version and runs another.
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "pip"
     directory: "/"
