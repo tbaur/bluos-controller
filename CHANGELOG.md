@@ -9,6 +9,13 @@ From 1.1.1 onward this file is maintained automatically by
 [release-please](https://github.com/googleapis/release-please) based on
 [Conventional Commits](https://www.conventionalcommits.org). See [RELEASING.md](RELEASING.md).
 
+## [1.4.3](https://github.com/tbaur/bluos-controller/compare/v1.4.2...v1.4.3) (2026-10-02)
+
+
+### Documentation
+
+* improve readability ([#57](https://github.com/tbaur/bluos-controller/issues/57)) ([a002b09](https://github.com/tbaur/bluos-controller/commit/a002b095d0aac1bcef984b309aaef0f8172b019d))
+
 ## [1.4.2](https://github.com/tbaur/bluos-controller/compare/v1.4.1...v1.4.2) (2026-08-30)
 
 
